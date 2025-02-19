@@ -2,6 +2,8 @@
 The Rheoscale calculator is used to analyze large datasets of protein substitutions in order to identify rheostat positions.
 The 2018 version of the calculator is available as Excel(TM) files or in R.
 
+The first worksheet in the workbook contains information about how to use the calculator.
+
 Please cite:
 
 RheoScale: A tool to aggregate and quantify experimentally determined substitution outcomes for multiple variants at individual protein positions
