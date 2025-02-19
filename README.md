@@ -20,3 +20,6 @@ PMID: 32449829 PMCID: PMC8990530 DOI: 10.1002/prot.25953
 2. Rheostat functional outcomes occur when substitutions are introduced at nonconserved positions that diverge with speciation.
 Swint-Kruse L, Martin TA, Page BM, Wu T, Gerhart PM, Dougherty LL, Tang Q, Parente DJ, Mosier BR, Bantis LE, Fenton AW.
 Protein Sci. 2021 Sep;30(9):1833-1853. doi: 10.1002/pro.4136. Epub 2021 Jun 11.  PMID: 34076313 
+
+# Contacts
+For scientific questions about the dataset, please contact the senior faculty related to this project, Dr. Liskin Swint-Kruse (lswint-kruse@kumc.edu)
