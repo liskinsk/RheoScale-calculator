@@ -1,15 +1,16 @@
 # RheoScale-calculator
 The Rheoscale calculator is used to analyze large datasets of protein substitutions in order to identify rheostat positions.
-The 2018 version of the calculator is available as Excel(TM) files or in R.
+The 2018 version of the calculator is available as Excel(TM) files or in R. RheoScale 2.0 (created in 2025) is available as Excel (TM) files
+or as a python code.
 
-The first worksheet in the workbook contains information about how to use the calculator.
+The first worksheet in the workbook contains information about how to use the calculator.  The python code has an associated README file.
 
 Please cite:
 
 RheoScale: A tool to aggregate and quantify experimentally determined substitution outcomes for multiple variants at individual protein positions
 Abby M Hodges, Aron W Fenton, Larissa L Dougherty, Andrew C Overholt, Liskin Swint-Kruse.  Hum Mutat. 2018 Dec;39(12):1814-1826. doi: 10.1002/humu.23616. 
 
-The upcoming 2025 version of the calculator is available as Excel(TM) files or as python code.  A citation will be forthcoming for this work.
+A citation will be forthcoming for RheoScale 2.0.
 
 Other citations associated with the 2025 version of the RheoScale calculator include
 1. Identification of biochemically neutral positions in liver pyruvate kinase. 
