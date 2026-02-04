@@ -1,0 +1,26 @@
+{
+    "protein_name": "Plpro_abundance",
+    "input_file_name": null,
+    "number_of_positions": 315,
+    "log_scale": false,
+    "WT_val": 0.97,
+    "WT_error": 0.21,
+    "WT_name": null,
+    "min_val": 0.3,
+    "max_val": 1.35,
+    "error_val": 0.25478473259628126,
+    "number_of_bins": 7,
+    "dead_extremum": "Min",
+    "neutral_binsize": 0.84,
+    "output_dir": "Rheoscale_analysis",
+    "output_histogram_plots": true,
+    "even_bins": true,
+    "_true_min": -0.902305353,
+    "_true_max": 1.629573652,
+    "columns": {
+        "position": "Position",
+        "substitution": "Mutation",
+        "value": "Functional Value",
+        "error": "Error"
+    }
+}
