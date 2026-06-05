@@ -134,10 +134,10 @@ def infer_WT(raw_DMS_data: pd.DataFrame, config: RheoscaleConfig,  update: dict)
      
     else:
         if config.WT_val is not None:
-            raise ValueError(f'the WT values provided as an input = {WT_val}\n this value is not found with in the bounds of the assay min = {update['min_val']} -- max {update['max_val']}')
+            raise ValueError(f"the WT values provided as an input = {WT_val}\n this value is not found with in the bounds of the assay min = {update['min_val']} -- max {update['max_val']}")
         else:
             
-            raise ValueError(f'the WT values calculated from the average of {num_of_wt} WT values found in the input file = {WT_val}\n this value is not found with in the bounds of the assay min = {update['min_val']} -- max {update['max_val']}')
+            raise ValueError(f"the WT values calculated from the average of {num_of_wt} WT values found in the input file = {WT_val}\n this value is not found with in the bounds of the assay min = {update['min_val']} -- max {update['max_val']}")
 
 def infer_neutral_bin_size(update: dict, is_log, error_val):
     if is_log and error_val is not None:
