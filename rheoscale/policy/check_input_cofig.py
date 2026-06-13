@@ -118,7 +118,7 @@ def infer_WT(raw_DMS_data: pd.DataFrame, config: RheoscaleConfig,  update: dict)
             mask = raw_DMS_data[config.columns['position']] == WT_name
             raw_DMS_data.drop(raw_DMS_data[mask].index, inplace=True)
         else:
-            raise ValueError(f'WT_value was not added to the config and cannot be found in the Data \nin the DATA WT values must be called "{WT_name}" in the position column')
+            raise ValueError(f"WT_value was not added to the config and cannot be found in the Data \nin the DATA WT values must be called \"{WT_name}\" in the position column")
     
     else:
         WT_val =  config.WT_val
