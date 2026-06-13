@@ -1,0 +1,26 @@
+{
+    "protein_name": "Python_RheoScale_Plpro_INHIBITOR",
+    "input_file_name": null,
+    "number_of_positions": 313,
+    "log_scale": false,
+    "WT_val": 1.0,
+    "WT_error": 0.06,
+    "WT_name": null,
+    "min_val": 0.19,
+    "max_val": 1.5,
+    "error_val": 0.12000271733306271,
+    "number_of_bins": 10,
+    "dead_extremum": "Min",
+    "neutral_binsize": 0.26,
+    "output_dir": "Rheoscale_analysis",
+    "output_histogram_plots": false,
+    "even_bins": true,
+    "_true_min": -0.2114974,
+    "_true_max": 1.43345652,
+    "columns": {
+        "position": "Position",
+        "substitution": "Substitution",
+        "value": "Value",
+        "error": "Error"
+    }
+}
