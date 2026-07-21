@@ -3,38 +3,34 @@ from dataclasses import dataclass, fields
 from ..config import RheoscaleConfig
 from typing import Union
 from ..data_structures import HistogramData, HistogramFactory, RheoScores
-
-def compute_all_rheo_scores(position:str,runnig_config: RheoscaleConfig, DMS_position_data: pd.DataFrame, hist_info: HistogramFactory) -> RheoScores:
+#Using capped values for enahncing and neutral scores but not capped values for toggle and rheostat scores because the toggle and rheostat scores are only based on bin occupancy whereas enhancing and neutral are calculated based on the actual variant values.- HC
+def compute_all_rheo_scores(position:str, runnig_config: RheoscaleConfig, DMS_position_data: pd.DataFrame, hist_info: HistogramFactory) -> RheoScores:
     
-    '''
-    These funtions take one position and calculate the scores for every position'''
-    
+    '''These funtions take one position and calculate the scores for every position'''
     hist_info = hist_info.create_hist_data(DMS_position_data[runnig_config.columns['value']])
-
     num_of_var = DMS_position_data.shape[0] +1
-
     pos_rheoscores = RheoScores(position=position, num_of_variants=num_of_var, histogram=hist_info)
-
-    if position == '4':
-        pass
-    pos_rheoscores.neutral_score = compute_neutral_score(runnig_config, DMS_position_data)
-
-    pos_rheoscores.enhancing_score = compute_enhancing_score(runnig_config, DMS_position_data)
-    
+    # Positions with fewer than 5 variants shouldn't get scores, mirrors Excel behavior and avoids misleading scores. - HC   
+    if num_of_var < 5:
+        return pos_rheoscores
+    #Neutral and enhancing scores use values capped to min/max, — outliers beyond those bounds artificially inflate the enhancing score by appearing far past WT. 
+    #Toggle/rheostat scores use raw uncapped data because they are based on bin occupancy, not actual values. - HC
+    value_col = runnig_config.columns['value']
+    capped_data = DMS_position_data.copy()
+    capped_data[value_col] = capped_data[value_col].clip(
+        lower=runnig_config.min_val,
+        upper=runnig_config.max_val
+    )
+    pos_rheoscores.neutral_score = compute_neutral_score(runnig_config, capped_data)
+    pos_rheoscores.enhancing_score = compute_enhancing_score(runnig_config, capped_data)
     pos_rheoscores.toggle_score = compute_toggle_score(runnig_config, DMS_position_data, hist_info)
-
     pos_rheoscores.rheostat_score = compute_rheostat_score(runnig_config, DMS_position_data, hist_info)
-    
     pos_rheoscores.weighted_rheostat_score = coumpute_weighted_rheostat_score(runnig_config, DMS_position_data, hist_info)
-
     pos_rheoscores.binary = is_binary(runnig_config, DMS_position_data, hist_info)
-    
     pos_rheoscores.average = np.average(DMS_position_data[runnig_config.columns['value']].values)
-
-    pos_rheoscores.st_dev = np.std(DMS_position_data[runnig_config.columns['value']].values)
-
-    return pos_rheoscores    
-
+    # ddof=1 uses sample standard deviation rather than population std. Sample size (max 20 variants) is too small for population std to be appropriate, and matches Excel's stdev behavior. - HC
+    pos_rheoscores.st_dev = np.std(DMS_position_data[runnig_config.columns['value']].values, ddof=1)
+    return pos_rheoscores
 
 def compute_neutral_score(config: RheoscaleConfig, DMS_position_data: pd.DataFrame) -> np.float64:
     num_of_variants = DMS_position_data.shape[0]

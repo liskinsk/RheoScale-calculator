@@ -7,25 +7,32 @@ import matplotlib
 import sys
 if "debugpy" in sys.modules:
     matplotlib.use("Agg")
-
-colors = {'E': '#F94040', 'N':'#00C000' , "A":'#DE8BF9', 'T': '#AD07E3', 'R':'#FFDC00', 'M':'#A0FFA0', 'WT/I': '#00FFFF'}
+# Key is 'W' because plot_all_positions indexes colors via pos_type[0].upper(),
+# which takes only the first character of the assignment string. 'WT/inactive'[0] = 'W'. - HC
+colors = {'E': '#F94040', 'N':'#00C000' , "A":'#DE8BF9', 'T': '#AD07E3', 'R':'#FFDC00', 'M':'#A0FFA0', 'W': '#00FFFF'}
 
 import matplotlib.pyplot as plt
 
-def plot_all_positions(positions: list, hist_list: list, classifcation_dict:dict, dead_extremum, true_max, WT_value,dead_value,save_path, neutral_bin_size, prefix='', all_pos=False, is_even_bins=False):
+def plot_all_positions(positions: list, hist_list: list, classifcation_dict:dict, dead_extremum, true_max, WT_value,dead_value,far_value, save_path, neutral_bin_size, prefix='', all_pos=False, is_even_bins=False):
     master_hist_data = hist_list[0]
     for i in range(len(positions)):
         name = prefix+'_pos_'+str(positions[i])
         pos_type = classifcation_dict[positions[i]]
+        # Skip plotting for positions with no classification (n < 5 variants). pos_type
+        # is None, which pandas converts to NaN when building the classification dict.
+        # Attempting pos_type[0].upper() on a float causes a TypeError. - HC
         if all_pos:
-             make_tuning_plot_one_pos(hist_list[i], dead_extremum, WT_value,dead_value, neutral_bin_size, save_path, tle=name, true_max=true_max, position= positions[i], pos_type=pos_type[0].upper(), is_even_bins=is_even_bins)
+            if not isinstance(pos_type, str):
+                print(f"  Skipping plot for position {positions[i]} — no classification (too few variants)")
+            else:
+                make_tuning_plot_one_pos(hist_list[i], dead_extremum, WT_value,dead_value,far_value, neutral_bin_size, save_path, tle=name, true_max=true_max, position= positions[i], pos_type=pos_type[0].upper(), is_even_bins=is_even_bins)
         if i!=0:
              master_hist_data+= hist_list[i]
     all_title = prefix+'_all_positions'
-    make_tuning_plot_one_pos(master_hist_data, dead_extremum, WT_value,dead_value, neutral_bin_size, save_path, tle=all_title, true_max=true_max, is_all=True, is_even_bins=is_even_bins)
+    make_tuning_plot_one_pos(master_hist_data, dead_extremum, WT_value,dead_value,far_value, neutral_bin_size, save_path, tle=all_title, true_max=true_max, is_all=True, is_even_bins=is_even_bins)
 
     
-def make_tuning_plot_one_pos(hist_data: HistogramData , dead_extremum, WT_value, dead_value, neutral_bin_size,path,     
+def make_tuning_plot_one_pos(hist_data: HistogramData , dead_extremum, WT_value, dead_value, far_value, neutral_bin_size,path,     
     true_max: float = 0.0,
     position: str = None, 
     pos_type: str = None,
@@ -43,11 +50,15 @@ def make_tuning_plot_one_pos(hist_data: HistogramData , dead_extremum, WT_value,
         # ---- sanity check ----
         if len(bin_edges) != len(counts) + 1:
             raise ValueError("bin_edges must be one element longer than counts")
+        # Moves both edges to the min/max override for plotting purposes. is_even_bins should apply to
+        # both ends of the histogram, not just the dead side. - HC
         if is_even_bins:
              if dead_extremum == 'Min':
                   bin_edges[0] = dead_value
+                  bin_edges[-1] = far_value
              else:
                   bin_edges[-1] = dead_value
+                  bin_edges[0] = far_value
         
         # bin_widths = np.diff(bin_edges)
         # bin_centers = bin_edges[:-1] + bin_widths / 2
