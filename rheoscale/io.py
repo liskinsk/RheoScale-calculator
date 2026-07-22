@@ -44,14 +44,20 @@ def write_outputs(running_config: RheoscaleConfig, position_df: pd.DataFrame):
     class_path = out_dir / f'{running_config.protein_name}_classifications.csv'
     just_pos_and_assign.to_csv(class_path)
     classifcation_dict =just_pos_and_assign.set_index("position")["assignment"].to_dict()
+    #strech oppisite-end-of-dead-bin -HC
     if running_config.output_histogram_plots:
         is_hist_plots = True
     else:
         is_hist_plots= False
+    # far_value is the plain (non-stretched) boundary on the opposite end from dead. 
+    # Passed to make_tuning_plot_one_pos so is_even_bins can move that edge back to max_val/min_val for plotting purposes.
+    # Rather than showing the stretched _true_max/_true_min. - HC
     if running_config.dead_extremum == "Min":
         dead_value = running_config.min_val
+        far_value = running_config.max_val
     else:
         dead_value = running_config.max_val
+        far_value = running_config.min_val
 
     position_list = position_df['position'].to_list()
     hist_list = position_df['histogram'].to_list()
@@ -59,13 +65,14 @@ def write_outputs(running_config: RheoscaleConfig, position_df: pd.DataFrame):
     os.makedirs(plot_output, exist_ok=True)
     
 
-
+    #far_value -HC
     plot_all_positions(position_list, 
                        hist_list, 
                        classifcation_dict,
                        running_config.dead_extremum,
                        running_config._true_max,
-                        running_config.WT_val,dead_value ,
+                        running_config.WT_val,dead_value , far_value,
+
                         plot_output,
                         running_config.neutral_binsize,running_config.protein_name, 
                        is_hist_plots, 

@@ -45,7 +45,7 @@ def check_and_update_config(input_config: RheoscaleConfig, raw_DMS_data: pd.Data
             update['WT_error'] = input_config.WT_error
 
 
-    infer_neutral_bin_size(update, input_config.log_scale, input_config.error_val)
+    infer_neutral_bin_size(update, input_config.log_scale, input_config.WT_error)
     if input_config.neutral_binsize is not None:
         update['neutral_binsize']  = input_config.neutral_binsize
 
@@ -138,16 +138,17 @@ def infer_WT(raw_DMS_data: pd.DataFrame, config: RheoscaleConfig,  update: dict)
         else:
             
             raise ValueError(f"the WT values calculated from the average of {num_of_wt} WT values found in the input file = {WT_val}\n this value is not found with in the bounds of the assay min = {update['min_val']} -- max {update['max_val']}")
-
-def infer_neutral_bin_size(update: dict, is_log, error_val):
-    if is_log and error_val is not None:
-        WT_error = update['WT_error']
-        transformed_error = np.abs((0.434*WT_error)/(10**update['WT_val']))
-        update['neutral_binsize'] = transformed_error*4
-    
-    else:
-        WT_error = update['WT_error']
-        update['neutral_binsize'] = WT_error*4
+# The original code branched on error_val to decide whether to log-transform WT_error, but the correct condition is whether WT_error was explicitly
+# provided in the config. If it was, it is already log-transformed in check_and_update_config
+# and should not be transformed again. Changed the call site to pass WT_error instead of
+# error_val, and restructured the branch accordingly. - HC
+def infer_neutral_bin_size(update: dict, is_log, WT_error_explicit):
+    WT_error = update['WT_error']
+    if is_log:
+        if WT_error_explicit is None:
+            WT_error = np.abs((0.434*WT_error)/(10**update['WT_val']))
+        # else: already log-transformed earlier in check_and_update_config — don't need to touch it
+    update['neutral_binsize'] = WT_error*4
     
 
 
