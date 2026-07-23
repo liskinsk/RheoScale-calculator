@@ -1,0 +1,26 @@
+{
+    "protein_name": "Random_18_rep_2",
+    "input_file_name": null,
+    "number_of_positions": 96,
+    "log_scale": false,
+    "WT_val": 0.97,
+    "WT_error": 0.1,
+    "WT_name": null,
+    "min_val": 0.23,
+    "max_val": 1.28674797,
+    "error_val": 0.11304495986226852,
+    "number_of_bins": 9,
+    "dead_extremum": "Min",
+    "neutral_binsize": 0.4,
+    "output_dir": "Rheoscale_analysis",
+    "output_histogram_plots": false,
+    "even_bins": true,
+    "_true_min": -0.27993644,
+    "_true_max": 1.203312673,
+    "columns": {
+        "position": "Position",
+        "substitution": "Substitution",
+        "value": "Value",
+        "error": "Error"
+    }
+}

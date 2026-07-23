@@ -11,8 +11,7 @@ def calculate_rheoscores(config: RheoscaleConfig, DMS_values: pd.DataFrame, hist
     count = 0
     for position in DMS_values[config.columns['position']].unique():
         DMS_values_one_pos = DMS_values[DMS_values[config.columns['position']] == position]
-        if position == '119':
-            pass
+        
         rheo_scores: RheoScores = compute_all_rheo_scores(position, config, DMS_values_one_pos, histogram_factory)
         
         rheo_scores.assignment, rheo_scores.flag = make_assignment(config, rheo_scores)
@@ -23,7 +22,7 @@ def calculate_rheoscores(config: RheoscaleConfig, DMS_values: pd.DataFrame, hist
 
     return position_df
     
-    return position_df #this needs to have position columns
+    
 
 def make_assignment(running_config: RheoscaleConfig, rheo_scores: RheoScores) ->str:
     if rheo_scores.assignment is not None:

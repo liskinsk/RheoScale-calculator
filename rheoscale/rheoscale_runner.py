@@ -122,7 +122,7 @@ class RheoscaleRunner:
  
     def calculate_bins_and_weight(self):
         bins_size = np.abs(self.running_config.min_val-self.running_config.max_val)/self.running_config.number_of_bins
-        if self.running_config.neutral_binsize == 0.0 or self.running_config.neutral_binsize == 0:
+        if self.running_config.neutral_binsize == 0.0 or self.running_config.neutral_binsize == None:
             self.running_config = replace(self.running_config, neutral_binsize=bins_size*2)
 
         #add one for the final edge
