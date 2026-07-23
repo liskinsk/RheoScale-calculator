@@ -15,7 +15,6 @@ from .policy.rheoscores import calculate_rheoscores
 
 from .io import load_data, validate_columns, write_outputs
 
-
 class RheoscaleRunner:
     """
     High-level orchestrator for RheoScale.
@@ -125,28 +124,31 @@ class RheoscaleRunner:
         if self.running_config.neutral_binsize == 0.0 or self.running_config.neutral_binsize == None:
             self.running_config = replace(self.running_config, neutral_binsize=bins_size*2)
 
-        #add one for the final edge
         if self.running_config.dead_extremum == 'Min':
             if self.running_config._true_min > self.running_config.min_val:
                 dead = np.linspace(start=self.running_config.min_val, stop=bins_size+self.running_config.min_val, num=1)
             else:
                 dead = np.linspace(start=self.running_config._true_min, stop=bins_size+self.running_config.min_val, num=1)
-            remaining= np.linspace(start=bins_size+self.running_config.min_val, stop=self.running_config.max_val, num=self.running_config.number_of_bins)
+            remaining = np.linspace(start=bins_size+self.running_config.min_val, stop=self.running_config.max_val, num=self.running_config.number_of_bins)
             dead_value = dead[0]
             #if dead_value != self.running_config.min_val:
             bin_edges = np.concatenate([dead, remaining])
-            
-        else: 
-             dead = np.linspace(start=bins_size+self.running_config.max_val, stop=self.running_config._true_max, num=1)
-             remaining= np.linspace(start=bins_size+self.running_config.min_val, stop=self.running_config.max_val, num=self.running_config.number_of_bins-1)
-             bottom = np.linspace(start=remaining[0]-bins_size, stop=remaining[0], num=1)
-             
-             if dead != self.running_config.max_val:
-                bin_edges = np.concatenate([bottom, remaining, dead])
-             else: 
-                bin_edges = np.concatenate([bottom, remaining])
+            # Stretch the far (not-dead) edge to _true_max if an outlier exists on the opposite end from dead. Without this, outliers were excluded from bin counts entirely. - HC
+            if self.running_config._true_max > self.running_config.max_val:
+             bin_edges[-1] = self.running_config._true_max
+        # Fixed Max branch: original code passed _true_max as stop in np.linspace(num=1), which is  ignored bc (num=1 always returns [start]). The outlier value was
+        # never actually reaching bin_edges. Also fixed non-uniform bin widths caused by using num=number_of_bins-1 over the full span. Rewrote as a mirror of the
+        # Min branch: outlier check goes into start, remaining spans min_val to max_val-bins_size with num=number_of_bins so bin widths are uniform. - HC
+        else:
+            if self.running_config._true_max > self.running_config.max_val:
+                dead = np.linspace(start=self.running_config._true_max, stop=self.running_config.max_val, num=1)
+            else:
+                dead = np.linspace(start=self.running_config.max_val, stop=self.running_config.max_val, num=1)
+            remaining = np.linspace(start=self.running_config.min_val, stop=self.running_config.max_val-bins_size, num=self.running_config.number_of_bins)
+            bin_edges = np.concatenate([remaining, dead])
         wt_bin = np.digitize(self.running_config.WT_val, bin_edges)-1
-
+        
+    
         if self.running_config.dead_extremum == "Min":
             
             dead_bin = 0
