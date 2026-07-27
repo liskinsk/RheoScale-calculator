@@ -1,4 +1,3 @@
-print ("7/27addingWT to plots")
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -44,7 +43,7 @@ def make_tuning_plot_one_pos(hist_data: HistogramData , dead_extremum, WT_value,
     ylabel: str = "number of variants",
     log_y: bool = True,
     label_precision: int = 2):
-        #adding wt to plots-HC
+        # Increment the WT bin by 1 to include the WT as a variant in the plot. Done on a copy so scores are unaffected. - HC
         counts = hist_data.counts.copy()
         bin_edges = hist_data.bin_edges.copy()
         WT_index = np.digitize(WT_value, bin_edges) - 1
