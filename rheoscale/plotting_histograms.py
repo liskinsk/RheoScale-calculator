@@ -43,9 +43,11 @@ def make_tuning_plot_one_pos(hist_data: HistogramData , dead_extremum, WT_value,
     ylabel: str = "number of variants",
     log_y: bool = True,
     label_precision: int = 2):
-        
-        counts = hist_data.counts
+        # Increment the WT bin by 1 to include the WT as a variant in the plot. Done on a copy so scores are unaffected. - HC
+        counts = hist_data.counts.copy()
         bin_edges = hist_data.bin_edges.copy()
+        WT_index = np.digitize(WT_value, bin_edges) - 1
+        counts[WT_index] += 1
 
         # ---- sanity check ----
         if len(bin_edges) != len(counts) + 1:
@@ -90,8 +92,7 @@ def make_tuning_plot_one_pos(hist_data: HistogramData , dead_extremum, WT_value,
         )
         
         
-
-        WT_index =  np.digitize(WT_value, bin_edges) - 1
+        # Duplicate WT_index calculation removed. It is now computed above. - HC
         WT_bin_center = bin_centers[WT_index]
 
         ax.axvline(dead_value, color='red')
