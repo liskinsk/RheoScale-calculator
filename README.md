@@ -30,7 +30,7 @@ Protein Sci. 2021 Sep;30(9):1833-1853. doi: 10.1002/pro.4136. Epub 2021 Jun 11. 
 
 Rheoscale2.0 has been implemented 3 different formats. 
 1. As a Python Package (highly recommened; using pip, see below)
-2. As a Command line interface (CLI; using pip, see below)
+2. As a Command line interface (CLI; CLI; this github site)
 3. As an Excel workbook, which can be downloaded at https://github.com/liskinsk/RheoScale-calculator
 
 ## About the Calculations
