@@ -46,9 +46,9 @@ def make_tuning_plot_one_pos(hist_data: HistogramData , dead_extremum, WT_value,
     label_precision: int = 2):
         #adding wt to plots-HC
         counts = hist_data.counts.copy()
+        bin_edges = hist_data.bin_edges.copy()
         WT_index = np.digitize(WT_value, bin_edges) - 1
         counts[WT_index] += 1
-        bin_edges = hist_data.bin_edges.copy()
 
         # ---- sanity check ----
         if len(bin_edges) != len(counts) + 1:
