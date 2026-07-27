@@ -92,7 +92,7 @@ def make_tuning_plot_one_pos(hist_data: HistogramData , dead_extremum, WT_value,
         )
         
         
-        #Adding WT line to plots -HC
+        # Duplicate WT_index calculation removed — now computed above. - HC
         WT_bin_center = bin_centers[WT_index]
 
         ax.axvline(dead_value, color='red')
